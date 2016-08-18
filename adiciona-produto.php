@@ -1,26 +1,34 @@
-<?php require_once("cabecalho.php"); 		
-require_once("banco-produto.php"); 
+<?php
+require_once("classes\Produto.php");
+require_once("cabecalho.php");
+require_once("banco-produto.php");
 require_once("logica-usuario.php");
 verificaUsuario();
 
-$nome = $_POST['nome'];
-$preco = $_POST['preco'];
-$descricao = $_POST['descricao'];
-$categoria_id = $_POST['categoria_id'];
+$produto = new Produto();
+
+$produto->nome = $_POST['nome'];
+$produto->preco = $_POST['preco'];
+$produto->descricao = $_POST['descricao'];
+$produto->categoria_id = $_POST['categoria_id'];
+
 if(array_key_exists('usado', $_POST)) {
-	$usado = "true";
+    $usado = "true";
 } else {
-	$usado = "false";
+    $usado = "false";
 }
 
-if(insereProduto($conexao, $nome, $preco, $descricao, $categoria_id, $usado)) { ?>
-	<p class="text-success">O produto <?= $nome ?>, <?= $preco ?> foi adicionado.</p>
+$produto->usado = $usado;
+
+
+if(insereProduto($conexao, $produto)) { ?>
+	<p class="text-success">O produto <?= $produto->nome ?>, <?= $produto->preco ?> foi adicionado.</p>
 <?php } else {
 	$msg = mysqli_error($conexao);
 ?>
-	<p class="text-danger">O produto <?= $nome ?> não foi adicionado: <?= $msg?></p>
+	<p class="text-danger">O produto <?= $produto->nome ?> não foi adicionado: <?= $msg?></p>
 <?php
 }
 ?>
 
-<?php include("rodape.php"); ?>			
+<?php include("rodape.php"); ?>
